@@ -17,6 +17,7 @@ class Solution:
         self.women = women
         self.count = 0
         self.stable_matchings = []
+        self.output_stable_matchings()
 
     def output_stable_matchings(self):
         """
@@ -36,47 +37,28 @@ class Solution:
                 t += 1
                 pair.append(marriage)
             pairs.append(pair)
-        #prefw contains men who prefer that women over current, and listw is just added tp that
+        self.stable_matchings = pairs
+        #for prefw the key is the women and vice versa
         prefw = {}
         prefm = {}
-        for i in pairs:
-            for x in i:
-                man = self.men[x[0]]
-                woman = self.women[x[1]]
-                listm = []
-                listw = []
-                if man[0] != x[1]:
-                    if man[0] not in prefw:
-                        listw.append(x[0])
-                        prefw[man[0]] = listw
+        for i in self.stable_matchings:
+            stable = True
+            for t in i:
+                man = self.men[t.man()]
+                woman = self.women[t.woman()]
+                if man[0] != t.woman():
+                    if self.women[man[0]][0] == t.man():
+                        stable = False
+                    elif len(prefw[man[0]]) != 0:
+                        prefw[man[0]].append(t.man())
                     else:
-                        prefw[man[0]].append(x[0])
-                    if man[1] != x[1]:
-                        if man[1] not in prefw:
-                            listw = []
-                            listw.append(x[0])
-                            prefw[man[1]] = listw
+                        lists = [t.man()]
+                        prefw[man[0]] = lists
+                    if man[1] != t.woman():
+                        if self.women[man[1]][0] == t.man():
+                            stable = False
                         else:
-                            prefw[man[1]].append(x[0])
-                if woman[0] != x[0]:
-                    if woman[0] not in prefm:
-                        listm.append(x[1])
-                        prefm[woman[0]] = listm
-                    else:
-                        prefm[woman[0]].append(x[1])
-                    if woman[1] != x[0]:
-                        if woman[1] not in prefm:
-                            listm = []
-                            listm.append(x[1])
-                            prefm[woman[1]] = listm
-                        else:
-                            prefm[woman[1]].append(x[1])
-
-
-
-
-
-
+                            list.append(t.m)
 
 
 
@@ -85,3 +67,5 @@ class Solution:
 
         return self.stable_matchings
 
+
+Solution(3, women={1: [2,1,3], 2: [3,2,1], 3: [3,2,1]}, men={1: [1,2,3], 2: [2,1,3], 3: [3,2,1]})
